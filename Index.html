@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>Legend Electrik - Employee Attendance</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      color: #222;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.10);
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0;
+      font-size: 26px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: normal;
+      color: #555;
+    }
+
+    .instruction {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f1f5ff;
+      border-radius: 8px;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-top: 25px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px;
+      margin-top: 8px;
+      font-size: 16px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      background: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #verifyButton {
+      background: #4285f4;
+      color: white;
+    }
+
+    #verifyButton:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #b71c1c;
+    }
+
+    .info {
+      background: #e3f2fd;
+      color: #0d47a1;
+    }
+
+    .attendanceButton {
+      background: #00a63c;
+      color: white;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #777;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>LEGEND ELECTRIK</h1>
+
+    <h2>Employee Attendance</h2>
+
+
+    <div class="instruction">
+
+      <b>Attendance Instructions</b><br><br>
+
+      1. Select your name.<br>
+
+      2. Allow location access when requested.<br>
+
+      3. Verify that you are at the office.<br>
+
+      4. Complete the Attendance Form after verification.
+
+    </div>
+
+
+    <label for="employee">
+      Employee Name
+    </label>
+
+
+    <select id="employee">
+
+      <option value="">
+        Select Employee
+      </option>
+
+      <option value="BINIT SHAW">
+        BINIT SHAW
+      </option>
+
+      <option value="KOUSTHAV PODDAR">
+        KOUSTHAV PODDAR
+      </option>
+
+      <option value="GARGI MITRA">
+        GARGI MITRA
+      </option>
+
+      <option value="SUPARNA JANA">
+        SUPARNA JANA
+      </option>
+
+      <option value="BIKASH KUMAR SAH">
+        BIKASH KUMAR SAH
+      </option>
+
+      <option value="ABIR GHOSH">
+        ABIR GHOSH
+      </option>
+
+    </select>
+
+
+    <button
+      id="verifyButton"
+      onclick="verifyLocation()">
+
+      VERIFY MY LOCATION
+
+    </button>
+
+
+    <div id="result"></div>
+
+  </div>
+
+
+  <div class="footer">
+
+    Legend Electrik Enterprise<br>
+    Employee Attendance System
+
+  </div>
+
+</div>
+
+
+<script>
+
+
+// ======================================================
+// LOCATION VERIFICATION BACKEND
+// ======================================================
+
+const BACKEND_URL =
+  'https://script.google.com/macros/s/AKfycbyRaA7d8SJbqsakxRMiu_LNdZQbT4rr-LVPOg6zBq8qgEod6eHW8-9QtMrKPkxhsyD1RA/exec';
+
+
+// ======================================================
+// VERIFY LOCATION
+// ======================================================
+
+function verifyLocation() {
+
+  const employee =
+    document.getElementById('employee').value;
+
+  const button =
+    document.getElementById('verifyButton');
+
+  const result =
+    document.getElementById('result');
+
+
+  if (!employee) {
+
+    result.className = 'error';
+
+    result.innerHTML =
+      'Please select your name first.';
+
+    return;
+
+  }
+
+
+  if (!navigator.geolocation) {
+
+    result.className = 'error';
+
+    result.innerHTML =
+      'Location services are not supported by this browser.';
+
+    return;
+
+  }
+
+
+  button.disabled = true;
+
+  result.className = 'info';
+
+  result.innerHTML =
+    'Getting your location...<br><br>' +
+    'Please wait.';
+
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+      const latitude =
+        position.coords.latitude;
+
+      const longitude =
+        position.coords.longitude;
+
+      const accuracy =
+        position.coords.accuracy;
+
+      const userAgent =
+        navigator.userAgent;
+
+
+      result.innerHTML =
+        'Checking your location...';
+
+
+      sendLocationToBackend(
+        employee,
+        latitude,
+        longitude,
+        accuracy,
+        userAgent
+      );
+
+    },
+
+
+    function(error) {
+
+      button.disabled = false;
+
+      result.className = 'error';
+
+      let message =
+        'Unable to obtain your location.';
+
+
+      if (error.code === 1) {
+
+        message =
+          'Location permission was denied.<br><br>' +
+          'Please allow location access and try again.';
+
+      }
+
+
+      if (error.code === 2) {
+
+        message =
+          'Your location could not be determined.<br><br>' +
+          'Please turn on Location Services and try again.';
+
+      }
+
+
+      if (error.code === 3) {
+
+        message =
+          'Location request timed out.<br><br>' +
+          'Please try again.';
+
+      }
+
+
+      result.innerHTML = message;
+
+    },
+
+
+    {
+
+      enableHighAccuracy: true,
+
+      timeout: 15000,
+
+      maximumAge: 0
+
+    }
+
+  );
+
+}
+
+
+// ======================================================
+// SEND LOCATION TO GOOGLE APPS SCRIPT BACKEND
+// ======================================================
+
+function sendLocationToBackend(
+  employee,
+  latitude,
+  longitude,
+  accuracy,
+  userAgent
+) {
+
+  const callbackName =
+    'locationCallback_' +
+    Date.now();
+
+
+  window[callbackName] = function(response) {
+
+    delete window[callbackName];
+
+
+    const script =
+      document.getElementById(callbackName);
+
+    if (script) {
+      script.remove();
+    }
+
+
+    const button =
+      document.getElementById('verifyButton');
+
+    const result =
+      document.getElementById('result');
+
+
+    button.disabled = false;
+
+
+    if (!response.success) {
+
+      result.className = 'error';
+
+      result.innerHTML =
+
+        '<b>LOCATION NOT VERIFIED</b><br><br>' +
+
+        response.reason +
+
+        '<br><br>' +
+
+        'Distance: ' +
+        Number(response.distance).toFixed(2) +
+        ' metres<br>' +
+
+        'GPS Accuracy: approximately ' +
+        Number(response.accuracy).toFixed(1) +
+        ' metres';
+
+      return;
+
+    }
+
+
+    result.className = 'success';
+
+    result.innerHTML =
+
+      '<b>LOCATION VERIFIED ✓</b><br><br>' +
+
+      'Distance: ' +
+      Number(response.distance).toFixed(2) +
+      ' metres<br>' +
+
+      'GPS Accuracy: approximately ' +
+      Number(response.accuracy).toFixed(1) +
+      ' metres<br><br>' +
+
+      '<button class="attendanceButton" ' +
+      'onclick="openAttendanceForm()">' +
+
+      'OPEN ATTENDANCE FORM' +
+
+      '</button>';
+
+
+    window.attendanceFormUrl =
+      response.formUrl;
+
+  };
+
+
+  const params =
+
+    '?api=location' +
+
+    '&callback=' +
+    encodeURIComponent(callbackName) +
+
+    '&employee=' +
+    encodeURIComponent(employee) +
+
+    '&latitude=' +
+    encodeURIComponent(latitude) +
+
+    '&longitude=' +
+    encodeURIComponent(longitude) +
+
+    '&accuracy=' +
+    encodeURIComponent(accuracy) +
+
+    '&userAgent=' +
+    encodeURIComponent(userAgent);
+
+
+  const script =
+    document.createElement('script');
+
+  script.id = callbackName;
+
+  script.src =
+    BACKEND_URL + params;
+
+
+  document.body.appendChild(script);
+
+}
+
+
+// ======================================================
+// OPEN ATTENDANCE FORM
+// ======================================================
+
+function openAttendanceForm() {
+
+  if (!window.attendanceFormUrl) {
+
+    alert(
+      'Attendance Form link is not available.'
+    );
+
+    return;
+
+  }
+
+
+  window.open(
+    window.attendanceFormUrl,
+    '_blank'
+  );
+
+}
+
+</script>
+
+</body>
+
+</html>
